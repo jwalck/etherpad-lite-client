@@ -33,8 +33,10 @@ class EtherpadLiteClient
     }
 
     $conn = curl_init($call);
-    curl_exec($conn);
+    curl_setopt($conn, CURLOPT_RETURNTRANSFER, True);
+    $result = curl_exec($conn);
     curl_close($conn);
+    return $result;
   }
 
   // GROUPS
@@ -43,7 +45,7 @@ class EtherpadLiteClient
   // creates a new group 
   function createGroup()
   {
-    $this->HTTPCall("createGroup");
+    return $this->HTTPCall("createGroup");
   }
 
   // this functions helps you to map your application group ids to etherpad lite group ids 
@@ -87,13 +89,13 @@ class EtherpadLiteClient
   // creates a new session 
   function createSession($groupID, $authorID, $validUntil)
   {
-    $this->HTTPCall("createSession", "groupID", $groupID, "authorID", $authorID, "validUntil", $validUntil);
+    return $this->HTTPCall("createSession", "groupID", $groupID, "authorID", $authorID, "validUntil", $validUntil);
   }
 
   // deletes a session 
   function deleteSession($sessionID)
   {
-    $this->HTTPCall("deleteSession", "sessionID", $sessionID);
+    return $this->HTTPCall("deleteSession", "sessionID", $sessionID);
   }
 
   // returns informations about a session 
