@@ -5,11 +5,36 @@ class EtherpadLiteClient
   // INIT
   // Functions to setup the object
   
-  public $apikey = "";
-  
+  private $apikey = "";
+  private $baseurl = "http://localhost:9001/api";
+  private $apiversion = 1;
+
   function setParams($userkey)
   {
     $this->apikey  = $userkey;
+  }
+
+  private function HTTPCall()
+  {
+    $args = func_num_args();
+
+    // Need a function to call, otherwise just give up
+    if($args == 0) {
+      return 1;
+    }
+
+    $call = $this->baseurl . "/" . $this->apiversion . "/" . func_get_arg(0) . "?apikey=" . $this->apikey;
+
+    $arg_list = func_get_args();
+    if($args > 1) {
+      for($i = 1; $i < $args; $i = $i+2) {
+        $call = $call . "&" . func_get_arg($i) . "=" . func_get_arg($i+1);
+      }
+    }
+
+    $conn = curl_init($call);
+    curl_exec($conn);
+    curl_close($conn);
   }
 
   // GROUPS
@@ -18,9 +43,7 @@ class EtherpadLiteClient
   // creates a new group 
   function createGroup()
   {
-    $conn = curl_init("http://localhost:9001/api/1/createGroup");
-    curl_exec($conn);
-    curl_close($conn);
+    $this->HTTPCall("createGroup");
   }
 
   // this functions helps you to map your application group ids to etherpad lite group ids 
@@ -64,19 +87,13 @@ class EtherpadLiteClient
   // creates a new session 
   function createSession($groupID, $authorID, $validUntil)
   {
-    $conn = curl_init("http://localhost:9001/api/1/createSession?groupID=$groupID&authorID=$authorID&validUntil=$validUntil&apikey=$this->apikey");
-    curl_setopt($conn,CURLOPT_HTTPGET,1);
-    curl_exec($conn);
-    curl_close($conn);
+    $this->HTTPCall("createSession", "groupID", $groupID, "authorID", $authorID, "validUntil", $validUntil);
   }
 
   // deletes a session 
   function deleteSession($sessionID)
   {
-    $conn = curl_init("http://localhost:9001/api/1/createSession?sessionID=$sessionID");
-    curl_setopt($conn,CURLOPT_POSTFIELDS, "WRH5p6kFPdmvZInvjzDGGuYYA6aufTkj");
-    curl_exec($conn);
-    curl_close($conn);
+    $this->HTTPCall("deleteSession", "sessionID", $sessionID);
   }
 
   // returns informations about a session 
