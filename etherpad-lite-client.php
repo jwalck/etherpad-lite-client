@@ -78,6 +78,7 @@ class EtherpadLiteClient
   // creates a new author 
   function createAuthor($name)
   {
+    return $this->HTTPCall("createAuthor", "name", $name);
   }
 
   // this functions helps you to map your application author ids to etherpad lite author ids 
@@ -105,16 +106,19 @@ class EtherpadLiteClient
   // returns informations about a session 
   function getSessionInfo($sessionID)
   {
+    return $this->HTTPCall("getSessionInfo", "sessionID", $sessionID);
   }
 
   // returns all sessions of a group 
   function listSessionsOfGroup($groupID)
   {
+    return $this->HTTPCall("listSessionOfGroup", "groupID", $groupID);
   }
 
   // returns all sessions of an author 
   function listSessionsOfAuthor($authorID)
   {
+    return $this->HTTPCall("listSessionsOfAuthor", "authorID", $authorID);
   }
 
   // PAD CONTENT
@@ -146,36 +150,43 @@ class EtherpadLiteClient
   // returns the number of revisions of this pad 
   function getRevisionsCount($padID)
   {
+    return $this->HTTPCall("getRevisionsCount", "padID", $padID);
   }
 
   // deletes a pad 
   function deletePad($padID)
   {
+    return $this->HTTPCall("deletePad", "padID", $padID);
   }
 
   // returns the read only link of a pad 
   function getReadOnlyID($padID)
   {
+    return $this->HTTPCall("getReadOnlyID", "padID", $padID);
   }
 
   // sets a boolean for the public status of a pad 
   function setPublicStatus($padID, $publicStatus)
   {
+    return $this->HTTPCall("setPublicStatus", "padID", $padID, "publicStatus", $publicStatus);
   }
 
   // return true of false 
   function getPublicStatus($padID)
   {
+    return $this->HTTPCall("getPublicStatus", "padID", $padID);
   }
 
   // returns ok or a error message 
   function setPassword($padID, $password)
   {
+    return $this->HTTPCall("setPassword", "padID", $padID, "password", $password);
   }
 
   // returns true or false 
   function isPasswordProtected($padID)
   {
+    return $this->HTTPCall("isPasswordProtected", "padID", $padID);
   }
 }
 ?> 
