@@ -25,6 +25,7 @@ class EtherpadLiteClient
 
     $call = $this->baseurl . "/" . $this->apiversion . "/" . func_get_arg(0) . "?apikey=" . $this->apikey;
 
+    // Append arguments to the call
     $arg_list = func_get_args();
     if($args > 1) {
       for($i = 1; $i < $args; $i = $i+2) {
@@ -56,16 +57,19 @@ class EtherpadLiteClient
   // deletes a group 
   function deleteGroup($groupID)
   {
+    return $this->HTTPCall("deleteGroup", "groupID", $groupID);
   }
 
   // returns all pads of this group
   function listPads($groupID)
   {
+    return $this->HTTPCall("listPads", "groupID", $groupID);
   }
 
   // creates a new pad in this group 
   function createGroupPad($groupID, $padName, $text)
   {
+    return $this->HTTPCall("createGroupPad", "groupID", $groupID, "padName", $padName, "text", $text);
   }
 
   // AUTHORS
@@ -119,14 +123,13 @@ class EtherpadLiteClient
   // returns the text of a pad 
   function getText($padID) // should take optional $rev
   {
-    $conn = curl_init("http://localhost:9001/api/1/getText&padID=$padID");
-    curl_exec($conn);
-    curl_close($conn);
+    return $this->HTTPCall("getText", "padID", $padID);
   }
 
   // sets the text of a pad 
   function setText($padID, $text)
   {
+    return $this->HTTPCall("setText", "padID", $padID, "text", $text);
   }
 
   // PAD
@@ -137,11 +140,7 @@ class EtherpadLiteClient
   // creates a new pad
   function createPad($padID, $text)
   {
-    // where do I send the data?:)
-    $conn = curl_init("http://localhost:9001/api/1/createPad?padID=$padID&text=$text");
-    curl_setopt($conn, CURLOPT_POSTFIELDS, "padID=$padID&text=$text");
-    curl_exec($conn);
-    curl_close($conn);
+    return $this->HTTPCall("createPad", "padID", $padID, "text", $text);
   }
 
   // returns the number of revisions of this pad 
