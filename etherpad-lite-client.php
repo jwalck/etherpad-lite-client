@@ -1,12 +1,26 @@
 <?php
 class EtherpadLiteClient
 {
+  
+  // INIT
+  // Functions to setup the object
+  
+  public $apikey = "";
+  
+  function setParams($userkey)
+  {
+    $this->apikey  = $userkey;
+  }
+
   // GROUPS
   // Pads can belong to a group. There will always be public pads that doesnt belong to a group (or we give this group the id 0)
-    
+  
   // creates a new group 
   function createGroup()
   {
+    $conn = curl_init("http://localhost:9001/api/1/createGroup");
+    curl_exec($conn);
+    curl_close($conn);
   }
 
   // this functions helps you to map your application group ids to etherpad lite group ids 
@@ -50,11 +64,19 @@ class EtherpadLiteClient
   // creates a new session 
   function createSession($groupID, $authorID, $validUntil)
   {
+    $conn = curl_init("http://localhost:9001/api/1/createSession?groupID=$groupID&authorID=$authorID&validUntil=$validUntil&apikey=$this->apikey");
+    curl_setopt($conn,CURLOPT_HTTPGET,1);
+    curl_exec($conn);
+    curl_close($conn);
   }
 
   // deletes a session 
   function deleteSession($sessionID)
   {
+    $conn = curl_init("http://localhost:9001/api/1/createSession?sessionID=$sessionID");
+    curl_setopt($conn,CURLOPT_POSTFIELDS, "WRH5p6kFPdmvZInvjzDGGuYYA6aufTkj");
+    curl_exec($conn);
+    curl_close($conn);
   }
 
   // returns informations about a session 
@@ -76,8 +98,11 @@ class EtherpadLiteClient
   // Pad content can be updated and retrieved through the API
 
   // returns the text of a pad 
-  function getText($padID, $rev)
+  function getText($padID) // should take optional $rev
   {
+    $conn = curl_init("http://localhost:9001/api/1/getText&padID=$padID");
+    curl_exec($conn);
+    curl_close($conn);
   }
 
   // sets the text of a pad 
@@ -93,6 +118,11 @@ class EtherpadLiteClient
   // creates a new pad
   function createPad($padID, $text)
   {
+    // where do I send the data?:)
+    $conn = curl_init("http://localhost:9001/api/1/createPad?padID=$padID&text=$text");
+    curl_setopt($conn, CURLOPT_POSTFIELDS, "padID=$padID&text=$text");
+    curl_exec($conn);
+    curl_close($conn);
   }
 
   // returns the number of revisions of this pad 
