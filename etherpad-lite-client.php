@@ -3,15 +3,18 @@ class EtherpadLiteClient
 {
   
   // INIT
-  // Functions to setup the object
+  // Private functions and functions to initialize the object
   
-  private $apikey = "";
-  private $baseurl = "http://localhost:9001/api";
+  private $apikey;
+  private $baseurl;
   private $apiversion = 1;
 
-  function setParams($userkey)
+  // Set parameters that will be needed
+  function setParams($key, $url = "http://localhost:9001/api", $version = 1)
   {
-    $this->apikey  = $userkey;
+    $this->baseurl = $url;
+    $this->apikey = $key;
+    $this->apiversion = $version;
   }
 
   private function HTTPCall()
@@ -43,18 +46,19 @@ class EtherpadLiteClient
   // GROUPS
   // Pads can belong to a group. There will always be public pads that doesnt belong to a group (or we give this group the id 0)
   
-  // creates a new group 
+  // Creates a new group 
   function createGroup()
   {
     return $this->HTTPCall("createGroup");
   }
 
-  // this functions helps you to map your application group ids to etherpad lite group ids 
-  function getMappedGroup4($groupMapper)
+  // This functions helps you to map your application group ids to etherpad lite group ids 
+  function createGroupIfNotExistsFor($groupMapper)
   {
+    return $this->HTTPCall("createGroupIfNotExistsFor", "groupMapper", $groupMapper);
   }
 
-  // deletes a group 
+  // Deletes a group 
   function deleteGroup($groupID)
   {
     return $this->HTTPCall("deleteGroup", "groupID", $groupID);
@@ -67,9 +71,13 @@ class EtherpadLiteClient
   }
 
   // creates a new pad in this group 
-  function createGroupPad($groupID, $padName, $text)
+  function createGroupPad($groupID, $padName, $text = null)
   {
-    return $this->HTTPCall("createGroupPad", "groupID", $groupID, "padName", $padName, "text", $text);
+    if($text) {
+      return $this->HTTPCall("createGroupPad", "groupID", $groupID, "padName", $padName, "text", $text);
+    } else {
+      return $this->HTTPCall("createGroupPad", "groupID", $groupID, "padName", $padName);
+    }
   }
 
   // AUTHORS
@@ -78,12 +86,21 @@ class EtherpadLiteClient
   // creates a new author 
   function createAuthor($name)
   {
-    return $this->HTTPCall("createAuthor", "name", $name);
+    if($name) {
+      return $this->HTTPCall("createAuthor", "name", $name);
+    } else {
+      return $this->HTTPCall("createAuthor");
+    }
   }
 
   // this functions helps you to map your application author ids to etherpad lite author ids 
-  function getMappedAuthor4($authorMapper, $name)
+  function createAuthorIfNotExistsFor($authorMapper, $name)
   {
+    if($name) {
+      return $this->HTTPCall("createAuthorIfNotExistsFor", "authorMapper", $authorMapper, "name", $name);
+    } else {
+      return $this->HTTPCall("createAuthorIfNotExistsFor", "authorMapper", $authorMapper);
+    }
   }
 
   // SESSIONS
@@ -144,7 +161,11 @@ class EtherpadLiteClient
   // creates a new pad
   function createPad($padID, $text)
   {
-    return $this->HTTPCall("createPad", "padID", $padID, "text", $text);
+    if($text) {
+      return $this->HTTPCall("createPad", "padID", $padID, "text", $text);
+    } else {
+      return $this->HTTPCall("createPad", "padID", $padID);
+    }
   }
 
   // returns the number of revisions of this pad 
