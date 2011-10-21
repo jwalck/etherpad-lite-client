@@ -1,10 +1,10 @@
 <?php
 class EtherpadLiteClient
 {
-  
+
   // INIT
   // Private functions and functions to initialize the object
-  
+
   private $apikey;
   private $baseurl;
   private $apiversion = 1;
@@ -32,7 +32,7 @@ class EtherpadLiteClient
     $arg_list = func_get_args();
     if($args > 1) {
       for($i = 1; $i < $args; $i = $i+2) {
-        $call = $call . "&" . func_get_arg($i) . "=" . func_get_arg($i+1);
+        $call = $call . "&" . func_get_arg($i) . "=" . rawurlencode(func_get_arg($i+1));
       }
     }
 
@@ -45,20 +45,20 @@ class EtherpadLiteClient
 
   // GROUPS
   // Pads can belong to a group. There will always be public pads that doesnt belong to a group (or we give this group the id 0)
-  
-  // Creates a new group 
+
+  // Creates a new group
   function createGroup()
   {
     return $this->HTTPCall("createGroup");
   }
 
-  // This functions helps you to map your application group ids to etherpad lite group ids 
+  // This functions helps you to map your application group ids to etherpad lite group ids
   function createGroupIfNotExistsFor($groupMapper)
   {
     return $this->HTTPCall("createGroupIfNotExistsFor", "groupMapper", $groupMapper);
   }
 
-  // Deletes a group 
+  // Deletes a group
   function deleteGroup($groupID)
   {
     return $this->HTTPCall("deleteGroup", "groupID", $groupID);
@@ -70,7 +70,7 @@ class EtherpadLiteClient
     return $this->HTTPCall("listPads", "groupID", $groupID);
   }
 
-  // creates a new pad in this group 
+  // creates a new pad in this group
   function createGroupPad($groupID, $padName, $text = null)
   {
     if($text) {
@@ -81,9 +81,9 @@ class EtherpadLiteClient
   }
 
   // AUTHORS
-  // Theses authors are bind to the attributes the users choose (color and name). 
+  // Theses authors are bind to the attributes the users choose (color and name).
 
-  // creates a new author 
+  // creates a new author
   function createAuthor($name)
   {
     if($name) {
@@ -93,7 +93,7 @@ class EtherpadLiteClient
     }
   }
 
-  // this functions helps you to map your application author ids to etherpad lite author ids 
+  // this functions helps you to map your application author ids to etherpad lite author ids
   function createAuthorIfNotExistsFor($authorMapper, $name)
   {
     if($name) {
@@ -108,31 +108,31 @@ class EtherpadLiteClient
   // an author to access more than one group. The sessionID will be set as
   // a cookie to the client and is valid until a certian date.
 
-  // creates a new session 
+  // creates a new session
   function createSession($groupID, $authorID, $validUntil)
   {
     return $this->HTTPCall("createSession", "groupID", $groupID, "authorID", $authorID, "validUntil", $validUntil);
   }
 
-  // deletes a session 
+  // deletes a session
   function deleteSession($sessionID)
   {
     return $this->HTTPCall("deleteSession", "sessionID", $sessionID);
   }
 
-  // returns informations about a session 
+  // returns informations about a session
   function getSessionInfo($sessionID)
   {
     return $this->HTTPCall("getSessionInfo", "sessionID", $sessionID);
   }
 
-  // returns all sessions of a group 
+  // returns all sessions of a group
   function listSessionsOfGroup($groupID)
   {
     return $this->HTTPCall("listSessionOfGroup", "groupID", $groupID);
   }
 
-  // returns all sessions of an author 
+  // returns all sessions of an author
   function listSessionsOfAuthor($authorID)
   {
     return $this->HTTPCall("listSessionsOfAuthor", "authorID", $authorID);
@@ -141,13 +141,13 @@ class EtherpadLiteClient
   // PAD CONTENT
   // Pad content can be updated and retrieved through the API
 
-  // returns the text of a pad 
+  // returns the text of a pad
   function getText($padID) // should take optional $rev
   {
     return $this->HTTPCall("getText", "padID", $padID);
   }
 
-  // sets the text of a pad 
+  // sets the text of a pad
   function setText($padID, $text)
   {
     return $this->HTTPCall("setText", "padID", $padID, "text", $text);
@@ -168,46 +168,46 @@ class EtherpadLiteClient
     }
   }
 
-  // returns the number of revisions of this pad 
+  // returns the number of revisions of this pad
   function getRevisionsCount($padID)
   {
     return $this->HTTPCall("getRevisionsCount", "padID", $padID);
   }
 
-  // deletes a pad 
+  // deletes a pad
   function deletePad($padID)
   {
     return $this->HTTPCall("deletePad", "padID", $padID);
   }
 
-  // returns the read only link of a pad 
+  // returns the read only link of a pad
   function getReadOnlyID($padID)
   {
     return $this->HTTPCall("getReadOnlyID", "padID", $padID);
   }
 
-  // sets a boolean for the public status of a pad 
+  // sets a boolean for the public status of a pad
   function setPublicStatus($padID, $publicStatus)
   {
     return $this->HTTPCall("setPublicStatus", "padID", $padID, "publicStatus", $publicStatus);
   }
 
-  // return true of false 
+  // return true of false
   function getPublicStatus($padID)
   {
     return $this->HTTPCall("getPublicStatus", "padID", $padID);
   }
 
-  // returns ok or a error message 
+  // returns ok or a error message
   function setPassword($padID, $password)
   {
     return $this->HTTPCall("setPassword", "padID", $padID, "password", $password);
   }
 
-  // returns true or false 
+  // returns true or false
   function isPasswordProtected($padID)
   {
     return $this->HTTPCall("isPasswordProtected", "padID", $padID);
   }
 }
-?> 
+?>
